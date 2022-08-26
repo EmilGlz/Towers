@@ -13,6 +13,8 @@ public class PersonSpawner : MonoBehaviour
 
     public void StartSpawning(Transform destination, Tower startPosTower)
     {
-        startPosTower.StartMovingFromMe(destination);
+        startPosTower.destinations.Add(destination);
+        startPosTower.startMoving = true;
+        //startPosTower.StartMovingFromMe();
     }
 }

@@ -10,7 +10,6 @@ public class PlaneDrag : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        Debug.Log("Plane dragging... ");
         greenSign.gameObject.SetActive(true);
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (plane.Raycast(ray, out float distance))

@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour
         if (startTower == null) return;
         if (endTower == null) return;
         if (endTower == startTower) return;
+        if (startTower.isEmpty) return;
         int startIndex = CommonObjects.Instance.towers.IndexOf(startTower);
         int endIndex = CommonObjects.Instance.towers.IndexOf(endTower);
         AddMove(startIndex, endIndex);

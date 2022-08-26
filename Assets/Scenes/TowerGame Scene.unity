@@ -574,7 +574,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 56.3
+  orthographic size: 56.9
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -597,14 +597,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477432487}
-  m_LocalRotation: {x: 0.25983045, y: 0, z: 0, w: 0.96565425}
-  m_LocalPosition: {x: 2.3, y: 62.5, z: -102.4}
+  m_LocalRotation: {x: 0.25958318, y: 0.042121265, z: -0.01133365, w: 0.9647352}
+  m_LocalPosition: {x: -6.18, y: 62.5, z: -102.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 30.12, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30.12, y: 5, z: 0}
 --- !u!1 &494653502
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,7 +689,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 553739421}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.8, y: 3.8, z: -4.7}
+  m_LocalPosition: {x: 25, y: 3.8, z: -4.7}
   m_LocalScale: {x: 28.80968, y: 7.9785, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1219,7 +1219,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1105002868123082088, guid: f5796b0a677f6844a88260dd54dfdeeb, type: 3}
       propertyPath: m_Text
-      value: 31
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2621216676226188234, guid: f5796b0a677f6844a88260dd54dfdeeb, type: 3}
       propertyPath: maxPersonCount
@@ -1228,6 +1228,10 @@ PrefabInstance:
     - target: {fileID: 2621216676226188234, guid: f5796b0a677f6844a88260dd54dfdeeb, type: 3}
       propertyPath: currentPersonCount
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621216676226188234, guid: f5796b0a677f6844a88260dd54dfdeeb, type: 3}
+      propertyPath: delayInMilliSeconds
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2621216676226188235, guid: f5796b0a677f6844a88260dd54dfdeeb, type: 3}
       propertyPath: m_RootOrder
@@ -1590,6 +1594,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2621216676226188234, guid: f5796b0a677f6844a88260dd54dfdeeb, type: 3}
       propertyPath: isMine
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621216676226188234, guid: f5796b0a677f6844a88260dd54dfdeeb, type: 3}
+      propertyPath: isEmpty
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2621216676226188234, guid: f5796b0a677f6844a88260dd54dfdeeb, type: 3}

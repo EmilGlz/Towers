@@ -116,13 +116,14 @@ MonoBehaviour:
   maxPersonCount: 20
   currentPersonCount: 10
   isFull: 0
-  peopleGoingFromMe: 0
-  peopleComingToMe: 0
-  personCountText: {fileID: 1105002868123082088}
-  selectedSign: {fileID: 5744330968771312749}
-  isMine: 1
-  delayInMilliSeconds: 1500
+  isEmpty: 0
+  towersSendingPeopleToMe: []
+  towerState: 0
+  delay: 1
   destinations: []
+  selectedSign: {fileID: 5744330968771312749}
+  personCountText: {fileID: 1105002868123082088}
+  startMoving: 0
 --- !u!114 &2046495388364051393
 MonoBehaviour:
   m_ObjectHideFlags: 0

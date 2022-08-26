@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6779411978688945037}
   - component: {fileID: 6779411978688945034}
   - component: {fileID: 6779411978688945035}
-  - component: {fileID: 6779411978688945039}
   - component: {fileID: 6779411978688945038}
+  - component: {fileID: 6959925811458026242}
   m_Layer: 0
   m_Name: Person
   m_TagString: Person
@@ -94,12 +94,28 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6779411978688945032}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &6779411978688945039
+--- !u!114 &6779411978688945038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6779411978688945032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8addc69767806334cbbe46d552afdba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _startTower: {fileID: 0}
+  _destination: {fileID: 0}
+  speed: 15
+  distanceToStop: 1
+--- !u!54 &6959925811458026242
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,20 +129,5 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6779411978688945038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6779411978688945032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8addc69767806334cbbe46d552afdba2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _destination: {fileID: 0}
-  speed: 15
-  distanceToStop: 1
