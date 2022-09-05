@@ -55,7 +55,7 @@ public class Tower : MonoBehaviour
 
     public void OnPersonEnteredMe(Person person)
     {
-        Debug.Log("OnPersonEnteredMe()");
+        //Debug.Log("OnPersonEnteredMe()");
         if (towerState == TowerState.myTower)
         {
             // count++

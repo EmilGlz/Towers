@@ -9,8 +9,12 @@ public class Person : MonoBehaviour, IPooledObject
     public float _speed;
     public float distanceToStop = 1f;
     bool isMoving;
+    [SerializeField] Animator anim;
+
     public void OnObjectSpawn(float speed,Transform destination, Tower startPos)
     {
+        //anim.SetFloat("MoveSpeed", speed);
+        //anim.Play("Run", 0);
         _speed = speed;
         _destination = destination;
         _startTower = startPos;
