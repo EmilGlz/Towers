@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class Person : MonoBehaviour, IPooledObject
 {
-    public Transform _startTower;
+    public Tower _startTower;
     public Transform _destination;
-    public float speed;
+    public float _speed;
     public float distanceToStop = 1f;
     bool isMoving;
-    public void OnObjectSpawn(Transform destination, Transform startPos)
+    public void OnObjectSpawn(float speed,Transform destination, Tower startPos)
     {
+        _speed = speed;
         _destination = destination;
         _startTower = startPos;
         transform.LookAt(_destination);
         isMoving = true;
+        startPos.people.Add(this);
     }
 
     private void Update()
@@ -26,6 +28,6 @@ public class Person : MonoBehaviour, IPooledObject
             gameObject.SetActive(false);
             return;
         }
-        transform.position = Vector3.MoveTowards(transform.position, _destination.position, Time.deltaTime * speed);
+        transform.position = Vector3.MoveTowards(transform.position, _destination.position, Time.deltaTime * _speed);
     }
 }

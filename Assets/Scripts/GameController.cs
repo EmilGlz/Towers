@@ -28,6 +28,8 @@ public class GameController : MonoBehaviour
         if (startTower.isEmpty) return;
         int startIndex = CommonObjects.Instance.towers.IndexOf(startTower);
         int endIndex = CommonObjects.Instance.towers.IndexOf(endTower);
+        bool moveIsAllowed = MoveIsAllowed(startIndex, endIndex);
+        if (!moveIsAllowed) return;
         AddMove(startIndex, endIndex);
         endTower.towersSendingPeopleToMe.Add(startTower);
         var newLine = Instantiate(CommonObjects.Instance.linePrefab);
@@ -35,10 +37,11 @@ public class GameController : MonoBehaviour
         lineRenderer.SetPosition(0, startTower.transform.position);
         lineRenderer.SetPosition(1, endTower.transform.position);
         Line line = newLine.GetComponent<Line>();
-        line._startTower = startTower.transform;
-        line._destination = endTower.transform;
+        line._startTower = startTower;
+        line._destination = endTower;
+        line.GenerateBoxCollider();
         moveLines.Add(line);
-        personSpawner.StartSpawning(endTower.transform, startTower);
+        personSpawner.StartSpawning(endTower, startTower);
         endTower = null;
         startTower = null;
     }
@@ -71,13 +74,35 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void DeleteLine(Transform startTower, Transform endTower)
+    public void DeleteMove(Tower startTower, Tower endTower)
     {
-        var res = moveLines.FirstOrDefault(l => l._startTower == startTower && l._destination == endTower);
+        DeleteLine(startTower.transform, endTower.transform);
+        int startIndex = CommonObjects.Instance.towers.IndexOf(startTower);
+        int endIndex = CommonObjects.Instance.towers.IndexOf(endTower);
+        var res = moves.FirstOrDefault(m=> m.x==startIndex && m.y==endIndex);
+        moves.Remove(res);
+    }
+
+    void DeleteLine(Transform startTower, Transform endTower)
+    {
+        var res = moveLines.FirstOrDefault(l => l._startTower.transform == startTower && l._destination.transform == endTower);
         if (res != null)
         {
             moveLines.Remove(res);
             Destroy(res.gameObject);
         }
     }
+
+    bool MoveIsAllowed(int startIndex, int finishIndex)
+    {
+        if (moves.Count == 0) return true;
+        var res = moves.FirstOrDefault(m=>m.x == finishIndex && m.y == startIndex);
+        if (res == Vector2.zero) return true;
+        if (res != null) return false;
+        var res1 = moves.FirstOrDefault(m => m.x == startIndex && m.y == finishIndex);
+        if (res1 == Vector2.zero) return true;
+        if (res1 != null) return false;
+        return true;
+    }
+
 }

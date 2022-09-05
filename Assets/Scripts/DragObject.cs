@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 public class DragObject : MonoBehaviour
 {
-    [SerializeField] Transform greenSign;
+    Transform greenSign;
     Plane plane = new Plane(Vector3.up, Vector3.up * 1); // ground plane
     Tower myTower;
     GameController gameController;
     LineRenderer line;
+    SignCollisionDetector detector;
+
     private void Start()
     {
         line = CommonObjects.Instance.line;
@@ -14,14 +16,19 @@ public class DragObject : MonoBehaviour
         myTower = GetComponent<Tower>();
         greenSign = CommonObjects.Instance.touchSign.transform;
         greenSign.gameObject.SetActive(false);
+        detector = greenSign.GetComponent<SignCollisionDetector>();
     }
 
     private void OnMouseDown()
     {
         if (myTower.towerState != TowerState.myTower) return;
+        if (myTower.destinations.Count >= StableDatas.lineCountLevels[myTower.level]) return;
+        detector.canStopMoves = false;
         gameController.startTower = myTower;
-        line.SetWidth(3f,3f);
+        line.startWidth = 3f;
+        line.endWidth = 3f;
         line.gameObject.SetActive(true);
+        CommonObjects.Instance.trailRenderer.enabled = false;
     }
 
     void OnMouseDrag()
@@ -36,7 +43,7 @@ public class DragObject : MonoBehaviour
             line.SetPosition(1, greenSign.position);
         }
         var selectedTowerIndex = FindClosestTowerWithMaxDistance(15f);
-        gameController.SetTowersSigns(selectedTowerIndex);
+        //gameController.SetTowersSigns(selectedTowerIndex);
         if (selectedTowerIndex != -1)
         {
             var currentEndPos = CommonObjects.Instance.towers[selectedTowerIndex];
@@ -47,7 +54,7 @@ public class DragObject : MonoBehaviour
         {
             gameController.endTower = null;
         }
-        if (Physics.Raycast(transform.position, (greenSign.position - transform.position).normalized, out RaycastHit hit, Vector3.Distance(greenSign.position, transform.position) - 10))
+        if (Physics.Raycast(transform.position + Vector3.down * 2, (greenSign.position - transform.position).normalized, out RaycastHit hit, Vector3.Distance(greenSign.position, transform.position) - 10))
         {
             if (hit.collider.CompareTag("Obstacle"))
             {

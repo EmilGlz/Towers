@@ -23,6 +23,9 @@ public class CommonObjects : MonoBehaviour
     public Material greyMat;
 
     public GameObject linePrefab;
+    public TrailRenderer trailRenderer;
+
+
 }
 
 

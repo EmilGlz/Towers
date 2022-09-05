@@ -5,26 +5,33 @@ using UnityEngine;
 [System.Serializable]
 public class Tower : MonoBehaviour
 {
-    public int maxPersonCount;
-    public int currentPersonCount;
-    public bool isFull;
-    public bool isEmpty;
-    public List<Tower> towersSendingPeopleToMe;
-    public TowerState towerState;
-    [SerializeField] private int delay;
-    public List<Transform> destinations;
+    [SerializeField] List<MeshRenderer> towerMeshes; 
     [SerializeField] GameObject selectedSign;
     [SerializeField] TextMesh personCountText;
+    readonly int maxPersonCount = 60;
+    int currentPersonCount = 10;
+    [SerializeField] bool isFull;
+    float delay = 1f;
+    [HideInInspector] public int level;
+    [HideInInspector] public bool isEmpty;
+    [HideInInspector] public TowerState towerState;
+    public List<Tower> towersSendingPeopleToMe;
+    [HideInInspector] public List<Tower> destinations;
+    [HideInInspector] public bool startMoving;
+    [HideInInspector] public List<Person> people;
     ObjectPooler _objectPooler;
-    public bool startMoving;
     float _timePassed = 0f;
 
     private void Start()
     {
-        destinations = new List<Transform>();
+        if (currentPersonCount == 0) isEmpty = true;
+        else isEmpty = false;
+        destinations = new List<Tower>();
         _objectPooler = ObjectPooler.Instance;
         personCountText.text = currentPersonCount.ToString();
+        UpdateLevelByPersonCount();
         UpdateTowerColor();
+        UpdateTowerModel();
     }
 
     public void SetSelectedSign(bool selected)
@@ -37,16 +44,18 @@ public class Tower : MonoBehaviour
         if (other.CompareTag("Person"))
         {
             Person person = other.GetComponent<Person>();
-            if (person._startTower == transform)
+            if (person._startTower == this)
             {
                 return;
             }
-            OnPersonEnteredMe();
+            OnPersonEnteredMe(person);
+            person._startTower.people.Remove(person);
         }
     }
 
-    public void OnPersonEnteredMe()
+    public void OnPersonEnteredMe(Person person)
     {
+        Debug.Log("OnPersonEnteredMe()");
         if (towerState == TowerState.myTower)
         {
             // count++
@@ -60,6 +69,8 @@ public class Tower : MonoBehaviour
             {
                 isFull = true;
             }
+
+            UpdateLevelByPersonCount();
         }
         else if (towerState == TowerState.pending || towerState == TowerState.oppTower)
         {
@@ -75,67 +86,56 @@ public class Tower : MonoBehaviour
                 towerState = TowerState.myTower;
                 UpdateTowerColor();
             }
+            UpdateLevelByPersonCount();
         }
     }
 
-    public void OnPersonLeftMe()
+    public void OnPersonLeftMe(Tower destination)
     {
-        //if (currentPersonCount > 0)
-        //{
-        //    currentPersonCount--;
-        //    personCountText.text = currentPersonCount.ToString();
-        //    isEmpty = false;
-        //}
-        //else
-        //{
-        //    currentPersonCount = 0;
-        //    personCountText.text = currentPersonCount.ToString();
-        //    isEmpty = true;
-        //}
+        StartCoroutine(_objectPooler.SpawnFromPool("Person", this, Quaternion.identity, destination.transform, 0f));
+        if (isFull)
+        {
+            int towersToMeCount = towersSendingPeopleToMe.Count;
+            for (int i = 0; i < towersToMeCount; i++)
+            {
+                StartCoroutine(_objectPooler.SpawnFromPool("Person", this, Quaternion.identity, destination.transform, delay / 2));
+            }
+        }
     }
 
-    //public async void StartMovingFromMe(Transform destination)
-    //{
-    //    if (destinations.Contains(destination)) return;
-    //    destinations.Add(destination);
-    //    bool canSpawn = true;
-    //    while (canSpawn)
-    //    {
-    //        for (int i = 0; i < destinations.Count; i++)
-    //        {
-    //            OnPersonLeftMe();
-    //            if (isEmpty)
-    //            {
-    //                for (int j = 0; j < destinations.Count; j++)
-    //                {
-    //                    destinations[j].GetComponent<Tower>().towersSendingPeopleToMe.Remove(this);
-    //                    GameController.Instance.DeleteLine(transform, destinations[j]);
-    //                }
-    //                destinations = new List<Transform>();
-    //                canSpawn = false;
-    //                break;
-    //            }
-    //            _objectPooler.SpawnFromPool("Person", transform, Quaternion.identity, destinations[i]);
-    //        }
-    //        await Task.Delay(delayInMilliSeconds);
-    //    }    
-    //}
-
-    public void UpdateTowerColor()
+    void UpdateTowerColor()
     {
         if (towerState == TowerState.myTower)
         {
-            gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.blueMat;
+            //gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.blueMat;
+            towerMeshes[level-1].material = CommonObjects.Instance.blueMat;
         }
         else if (towerState == TowerState.pending)
         {
-            gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.greyMat;
+            towerMeshes[level - 1].material = CommonObjects.Instance.greyMat;
+            //gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.greyMat;
         }
         else
         {
-            gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.redMat;
+            towerMeshes[level - 1].material = CommonObjects.Instance.redMat;
+            //gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.redMat;
         }
         
+    }
+
+    public void UpdateTowerModel()
+    {
+        for (int i = 0; i < towerMeshes.Count; i++)
+        {
+            if (i == level-1)
+            {
+                towerMeshes[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                towerMeshes[i].gameObject.SetActive(false);
+            }
+        }
     }
 
     private void Update()
@@ -145,26 +145,57 @@ public class Tower : MonoBehaviour
             _timePassed += Time.deltaTime;
             if (_timePassed >= delay)
             {
-                Debug.Log("Left me: " + this.name);
                 for (int i = 0; i < destinations.Count; i++)
                 {
-                    OnPersonLeftMe();
                     if (isEmpty)
                     {
                         for (int j = 0; j < destinations.Count; j++)
                         {
                             destinations[j].GetComponent<Tower>().towersSendingPeopleToMe.Remove(this);
-                            GameController.Instance.DeleteLine(transform, destinations[j]);
+                            GameController.Instance.DeleteMove(this, destinations[j]);
                         }
-                        destinations = new List<Transform>();
+                        destinations = new List<Tower>();
                         startMoving = false;
                         break;
                     }
-                    _objectPooler.SpawnFromPool("Person", transform, Quaternion.identity, destinations[i]);
+                    OnPersonLeftMe(destinations[i]);
                     _timePassed = 0f;
                 }
             }
         }
     }
 
+    public void StopSendingPeople(Tower destination)
+    {
+        destinations.Remove(destination);
+        destination.towersSendingPeopleToMe.Remove(this);
+    }
+
+    void UpdateLevelByPersonCount()
+    {
+        var previousLevel = level;
+        if (currentPersonCount < 10)
+        {
+            level = 1;
+        }
+        else if (currentPersonCount < 30)
+        {
+            level = 2;
+        }
+        else
+        {
+            level = 3;
+        }
+        if (previousLevel != level)
+        {
+            // level changed
+            UpdateTowerModel();
+            UpdateTowerColor();
+        }
+        delay = StableDatas.delayLevels[level];
+        foreach (var item in people)
+        {
+            item._speed = StableDatas.personSpeedLevels[level];
+        }
+    }
 }

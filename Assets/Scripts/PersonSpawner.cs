@@ -3,18 +3,11 @@ using UnityEngine;
 
 public class PersonSpawner : MonoBehaviour
 {
-    readonly float delay = 0.5f;
-    //ObjectPooler objectPooler;
     public bool canSpawn = false;
-    private void Start()
-    {
-        //objectPooler = ObjectPooler.Instance;
-    }
 
-    public void StartSpawning(Transform destination, Tower startPosTower)
+    public void StartSpawning(Tower destination, Tower startPosTower)
     {
         startPosTower.destinations.Add(destination);
         startPosTower.startMoving = true;
-        //startPosTower.StartMovingFromMe();
     }
 }
