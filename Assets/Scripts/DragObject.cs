@@ -21,7 +21,8 @@ public class DragObject : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (myTower.towerState != TowerState.myTower) return;
+        // TODO Temp commented for testing purposes. Remove comments then
+        //if (myTower.towerState != TowerState.myTower) return;
         if (myTower.destinations.Count >= StableDatas.lineCountLevels[myTower.level]) return;
         detector.canStopMoves = false;
         gameController.startTower = myTower;
@@ -33,28 +34,28 @@ public class DragObject : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if (myTower.towerState != TowerState.myTower) return;
+        // TODO Temp commented for testing purposes. Remove comments then
+        //if (myTower.towerState != TowerState.myTower) return;
         greenSign.gameObject.SetActive(true);
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (plane.Raycast(ray, out float distance))
         {
             greenSign.position = ray.GetPoint(distance); // distance along the ray
             line.SetPosition(0, transform.position);
-            line.SetPosition(1, greenSign.position);
+            if (!detector.insideOfTower) line.SetPosition(1, greenSign.position);
         }
-        var selectedTowerIndex = FindClosestTowerWithMaxDistance(15f);
-        //gameController.SetTowersSigns(selectedTowerIndex);
-        if (selectedTowerIndex != -1)
-        {
-            var currentEndPos = CommonObjects.Instance.towers[selectedTowerIndex];
-            greenSign.position = currentEndPos.transform.position;
-            line.SetPosition(1, greenSign.position);
-        }
-        else
-        {
-            gameController.endTower = null;
-        }
-        if (Physics.Raycast(transform.position + Vector3.down * 2, (greenSign.position - transform.position).normalized, out RaycastHit hit, Vector3.Distance(greenSign.position, transform.position) - 10))
+        //var selectedTowerIndex = FindClosestTowerWithMaxDistance(15f);
+        //if (selectedTowerIndex != -1)
+        //{
+        //    var currentEndPos = CommonObjects.Instance.towers[selectedTowerIndex];
+        //    greenSign.position = currentEndPos.transform.position;
+        //    line.SetPosition(1, greenSign.position);
+        //}
+        //else
+        //{
+        //    gameController.endTower = null;
+        //}
+        if (Physics.Raycast(transform.position, (greenSign.position - transform.position).normalized, out RaycastHit hit, Vector3.Distance(greenSign.position, transform.position) - 10))
         {
             if (hit.collider.CompareTag("Obstacle"))
             {
@@ -64,16 +65,15 @@ public class DragObject : MonoBehaviour
         else
         {
             line.material = CommonObjects.Instance.greenMat;
-            if (selectedTowerIndex != -1)
-            {
-                gameController.endTower = CommonObjects.Instance.towers[selectedTowerIndex];
-            }
+            //if (selectedTowerIndex != -1)
+            //{
+            //    gameController.endTower = CommonObjects.Instance.towers[selectedTowerIndex];
+            //}
         }
     }
 
     private void OnMouseUp()
     {
-        //Debug.Log("OnMouseUp: " + this.name);
         greenSign.gameObject.SetActive(false);
         line.gameObject.SetActive(false);
         gameController.StartMovingAsync();

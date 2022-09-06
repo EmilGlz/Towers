@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour
         if (startTower.isEmpty) return;
         int startIndex = CommonObjects.Instance.towers.IndexOf(startTower);
         int endIndex = CommonObjects.Instance.towers.IndexOf(endTower);
-        bool moveIsAllowed = MoveIsAllowed(startIndex, endIndex);
+        bool moveIsAllowed = MoveIsAllowed(startTower, endTower);
         if (!moveIsAllowed) return;
         AddMove(startIndex, endIndex);
         endTower.towersSendingPeopleToMe.Add(startTower);
@@ -93,16 +93,30 @@ public class GameController : MonoBehaviour
         }
     }
 
-    bool MoveIsAllowed(int startIndex, int finishIndex)
+    bool MoveIsAllowed(Tower start, Tower finish)
     {
         if (moves.Count == 0) return true;
-        var res = moves.FirstOrDefault(m=>m.x == finishIndex && m.y == startIndex);
-        if (res == Vector2.zero) return true;
-        if (res != null) return false;
-        var res1 = moves.FirstOrDefault(m => m.x == startIndex && m.y == finishIndex);
-        if (res1 == Vector2.zero) return true;
-        if (res1 != null) return false;
-        return true;
+        int startIndex = CommonObjects.Instance.towers.IndexOf(start);
+        int finishIndex = CommonObjects.Instance.towers.IndexOf(finish);
+
+        var res = moves.FindIndex(m => m.x == startIndex && m.y == finishIndex); // if move already exists
+        if (res != -1) return false;
+
+        var res1 = moves.FindIndex(m => m.x == finishIndex && m.y == startIndex);
+        if (res1 == -1) return true; // if there is no opposite move, then allow
+        else // if there is an opposite move
+        {
+            if (start.colorTeam != finish.colorTeam) // if opposite move is other color
+            {
+                return true;
+            }
+            else // if opposite move is the same color
+            {
+                return false;
+            }
+        }
+
+
     }
 
 }

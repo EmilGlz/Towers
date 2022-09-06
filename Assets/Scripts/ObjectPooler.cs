@@ -62,7 +62,7 @@ public class ObjectPooler : MonoBehaviour
         if (pooledObject != null)
         {
             var speed = StableDatas.personSpeedLevels[startPos.level];
-            pooledObject.OnObjectSpawn(speed, destination, startPos );
+            pooledObject.OnObjectSpawn(speed, destination, startPos, startPos.colorTeam);
         }
         //return objectToSpawn;
     }

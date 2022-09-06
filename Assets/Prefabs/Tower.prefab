@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 2046495388364051393}
   m_Layer: 7
   m_Name: Tower
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -205,16 +205,14 @@ MonoBehaviour:
   - {fileID: 8021792535640153884}
   selectedSign: {fileID: 5744330968771312749}
   personCountText: {fileID: 1105002868123082088}
-  level: 0
-  maxPersonCount: 20
-  currentPersonCount: 10
   isFull: 0
+  level: 0
   isEmpty: 0
-  towerState: 0
   towersSendingPeopleToMe: []
   destinations: []
   startMoving: 0
   people: []
+  colorTeam: 0
 --- !u!114 &2046495388364051393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,7 +225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9127902fed640d14c92c1c9dc94eef84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  greenSign: {fileID: 0}
 --- !u!1 &5057353416578703231
 GameObject:
   m_ObjectHideFlags: 0

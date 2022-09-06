@@ -1498,7 +1498,10 @@ MonoBehaviour:
   _destination: {fileID: 0}
   _speed: 0
   distanceToStop: 1
-  anim: {fileID: 0}
+  colorTeam: 0
+  changingColorPart: {fileID: 1339711189804317}
+  anim: {fileID: 95541722643211615}
+  collider: {fileID: 6779411978688945035}
 --- !u!54 &6959925811458026242
 Rigidbody:
   m_ObjectHideFlags: 0

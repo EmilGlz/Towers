@@ -14,13 +14,13 @@ public class Tower : MonoBehaviour
     float delay = 1f;
     [HideInInspector] public int level;
     [HideInInspector] public bool isEmpty;
-    [HideInInspector] public TowerState towerState;
     public List<Tower> towersSendingPeopleToMe;
     [HideInInspector] public List<Tower> destinations;
     [HideInInspector] public bool startMoving;
     [HideInInspector] public List<Person> people;
     ObjectPooler _objectPooler;
     float _timePassed = 0f;
+    public ColorTeam colorTeam;
 
     private void Start()
     {
@@ -55,8 +55,7 @@ public class Tower : MonoBehaviour
 
     public void OnPersonEnteredMe(Person person)
     {
-        //Debug.Log("OnPersonEnteredMe()");
-        if (towerState == TowerState.myTower)
+        if (colorTeam == person.colorTeam)
         {
             // count++
             if (currentPersonCount < maxPersonCount)
@@ -72,7 +71,7 @@ public class Tower : MonoBehaviour
 
             UpdateLevelByPersonCount();
         }
-        else if (towerState == TowerState.pending || towerState == TowerState.oppTower)
+        else
         {
             // count--
             if (currentPersonCount > 0)
@@ -83,7 +82,7 @@ public class Tower : MonoBehaviour
             else
             {
                 isEmpty = true;
-                towerState = TowerState.myTower;
+                colorTeam = person.colorTeam;
                 UpdateTowerColor();
             }
             UpdateLevelByPersonCount();
@@ -105,22 +104,23 @@ public class Tower : MonoBehaviour
 
     void UpdateTowerColor()
     {
-        if (towerState == TowerState.myTower)
+
+        if (colorTeam == ColorTeam.blue)
         {
-            //gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.blueMat;
             towerMeshes[level-1].material = CommonObjects.Instance.blueMat;
         }
-        else if (towerState == TowerState.pending)
-        {
-            towerMeshes[level - 1].material = CommonObjects.Instance.greyMat;
-            //gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.greyMat;
-        }
-        else
+        else if (colorTeam == ColorTeam.red)
         {
             towerMeshes[level - 1].material = CommonObjects.Instance.redMat;
-            //gameObject.GetComponent<Renderer>().material = CommonObjects.Instance.redMat;
         }
-        
+        else if (colorTeam == ColorTeam.green)
+        {
+            towerMeshes[level - 1].material = CommonObjects.Instance.greenMat;
+        }
+        else if (colorTeam == ColorTeam.grey)
+        {
+            towerMeshes[level - 1].material = CommonObjects.Instance.greyMat;
+        }
     }
 
     public void UpdateTowerModel()
